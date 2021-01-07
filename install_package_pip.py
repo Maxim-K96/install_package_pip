@@ -2,7 +2,10 @@
 #-*- encoding:utf8 -*-
 # install_package_pip_auto позволяет создавать несколько потоков загрузки модулей Python 3x
 # language doc: ru
-
+# Author: Kolokoltsev Maxim
+# E-mail: Kolokolcev20@mail.ru
+#
+# version 1.1b
 try:
   import sys
   import os
@@ -10,18 +13,13 @@ try:
   from loguru import logger
   from datetime import datetime
 except:
-  raise ImportError
+  raise ImportError('ModuleNotFound')
   logger.add('./logfiles/install_package_pip_%s.log'%datetime.today().strftime('%d.%m.%Y-%H:%M:%S'), format='{time}{level}{message}', level='ERROR', rotation='300KB', compression='zip')
 
 @logger.catch
 class Install_pip_packages(object):
-  def __init__(self, tread=sys.argv[1], packages=sys.argv[2:]):
+  def __init__(self, tread:int, packages:dict):
     self.checking_argv(tread, packages)
-
-  def info(self):
-    __version__ = '1.0'
-    __autor__ = 'Kolokoltsev Maxim'
-    __email__ = 'Kolokolcev20@mail.ru'
 
   def install_package(self, package):
     """Метод установки пакетов с помощью pip"""
@@ -32,37 +30,34 @@ class Install_pip_packages(object):
     print('\n', ' '*10, '*'*10, ' The end ', '*'*10, '\n')
   
   def checking_argv(self, tread_argv, packages):
+    """Метод проверки аргументов"""
     try: 
       tread = ''.join(tread_argv)
       if tread.isdecimal():
         pass
       else:
-        description = """
-  Пожалуйста введите количество потоков в диапазоне от 1 до 8\n\n\tФормат записи:\ninstall_package_pip_auto.py treads -> int [packages] -> str\n\nВведите количество потоков: """
-        tread = input(description)
-        packages = sys.argv[1:]
+        msg = """\nПожалуйста введите количество потоков в диапазоне от 1 до 8"""
+        logger.info(msg)
+        tread = input('\nВведите количество потоков: ')
     except IndexError:
       logger.add('./logfiles/install_package_pip_%s.log'%datetime.today().strftime('%d.%m.%Y-%H:%M:%S'), format='{time}{level}{message}', level='ERROR', rotation='300KB', compression='zip')
-      description = """
-  Формат записи:\ninstall_package_pip_auto.py treads -> int [packages] -> str\nПожалуйста введите количество потоков и устанавливаемые пакеты"""
-      print(description)
-      sys.exit()
+      raise ErrorNotData('Пожалуйста введите количество потоков и устанавливаемые пакеты')
 
     if packages == []:
-      description = """
-  Вы забыли указать устанавливаемые пакеты\nПожайлуста, укажите модули, которые вы хотите установить\nФормат записи:\n\tinstall_package_pip_auto.py treads -> int [packages] -> str\nПример:\n\tinstall_package_pip_auto.py 2 numpy spyder Pandas md5\n\nВведите название модулей, которые вы хотите установить: """
-  #    raise SyntaxError('ModuleNotIncluded') #Модуль не вписан
-      packages.append(input(description))
+      msg = """Вы забыли указать устанавливаемые пакеты\nПожайлуста, укажите модули, которые вы хотите установить"""
+#    raise SyntaxError('ModuleNotIncluded') #Модуль не вписан
+      logger.info(msg)
+      packages.append(input('\nВведите название модулей, которые вы хотите установить: '))
 
     install_package = []
     for package in packages:
       try:
         try:
           exec('import %s' % package)
-          print('Модуль {package} установлен в вашей системе'.format(package=package))
+          logger.info('Модуль {package} установлен в вашей системе'.format(package=package))
         except SyntaxError:
           logger.add('./logfiles/install_package_pip_%s.log'%datetime.today().strftime('%d.%m.%Y-%H:%M:%S'), format='{time}{level}{message}', level='ERROR', rotation='300KB', compression='zip')
-          print('Модуль {package} является частью стандартного набора Python'.format(package=package))
+          logger.info('Модуль {package} является частью стандартного набора Python'.format(package=package))
       except(ImportError):
         logger.add('./logfiles/install_package_pip_%s.log'%datetime.today().strftime('%d.%m.%Y-%H:%M:%S'), format='{time}{level}{message}', level='ERROR', rotation='300KB', compression='zip')
         install_package.append(package)
@@ -70,10 +65,37 @@ class Install_pip_packages(object):
     self.tread_pool(tread, install_package)
 
   def tread_pool(self, tread, install_package):
+    """ Метод многопоточности"""
     pool = TreadPool(int(tread))
     pool.map(self.install_package, install_package)
     pool.close()
 
 
 if __name__=="__main__":
-  installer = Install_pip_packages()
+
+  try:
+    tread = sys.argv[1]
+    packages = sys.argv[2:]
+  except IndexError:
+    msg = """\nПожалуйста введите количество потоков в диапазоне от 1 до 8"""
+    logger.info(msg)
+    tread = input('\nВведите количество потоков: ')
+    packages = sys.argv[1:]
+
+  if tread.isdecimal():
+    pass
+  else:
+    msg = """\nПожалуйста введите количество потоков в диапазоне от 1 до 8\n\n\tФормат записи:\ninstall_package_pip_auto.py treads:int [packages]:str"""
+    logger.info(msg)
+    tread = input('\nВведите количество потоков: ')
+    packages = sys.argv[1:]
+
+  if packages == []:
+    msg = """\nВы забыли указать устанавливаемые пакеты\nПожайлуста, укажите модули, которые вы хотите установить"""
+#   raise SyntaxError('ModuleNotIncluded') #Модуль не вписан
+    logger.info(msg)
+    package = (input('\nВведите название модулей, которые вы хотите установить: ').split(' '))
+    packages = [pack for pack in package]
+
+  installer = Install_pip_packages(tread, packages)
+

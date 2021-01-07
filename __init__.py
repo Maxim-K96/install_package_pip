@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 #-*- encoding:utf8 -*-
 
-from .install_package_pip import Install_pip_packages as mod
+from .install_package_pip import *
 
-#__version__ = __version__
-#__author__ = 'Kolokoltsev Maxim'
-#__email__ = 'Kolokolcev20@mail.ru'
+__version__ = '1.1b'
+__author__ = 'Kolokoltsev Maxim'
+__email__ = 'Kolokolcev20@mail.ru'
 
-print(f'import install_package_pip v.{mod.info.__version__}\nauthor: {mod.info.__author__}\nemail: {mod.info.__email__}')
+print(f'import install_package_pip v.{__version__} from {__name__}\nauthor: {__author__}\nemail: {__email__}')
 
