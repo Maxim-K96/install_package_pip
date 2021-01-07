@@ -22,11 +22,11 @@ setup(
     long_description_content_type="text/x-rst",
     author="Kolokoltsev Maxim",
     author_email="Kolokolcev20@mail.ru",
-    url="https://github.com/", # TODO
-    download_url="https://github.com/-*-TODO-*-/{}.tar.gz".format(version),
+    url="https://github.com/MaximTourist/install_package_pip",
+    download_url="https://github.com/MaximTourist/install_package_pip_v{version}.tar.gz".format(version),
     project_urls={
-        "Changelog": "https://github.com/-*-TODO-*-/master/CHANGELOG.rst",
-        "Documentation": "-*-TODO-*-",
+        "Changelog": "https://github.com/MaximTourist/install_package_pip/README.md",
+        "Documentation": "https://github.com/MaximTourist/install_package_pip/README.md",
     },
     keywords=["install_package_pip", "installer", "pip"],
     license="MIT license",
@@ -37,7 +37,6 @@ setup(
         "Natural Language :: Russia",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
-        "Programming Language :: Python",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
@@ -50,24 +49,13 @@ setup(
 """
     install_requires=[
         "colorama>=0.3.4 ; sys_platform=='win32'",
-        "aiocontextvars>=0.2.0 ; python_version<'3.7'",
-        "win32-setctime>=1.0.0 ; sys_platform=='win32'",
+        "loguru>=0.5.3"
     ],
     extras_require={
         "dev": [
-            "black>=19.10b0 ; python_version>='3.6'",
-            "codecov>=2.0.15",
+            "loguru>=0.5.3",
             "colorama>=0.3.4",
-            "flake8>=3.7.7",
-            "isort>=5.1.1 ; python_version>='3.6'",
-            "tox>=3.9.0",
-            "tox-travis>=0.12",
-            "pytest>=4.6.2",
-            "pytest-cov>=2.7.1",
-            "Sphinx>=2.2.1",
-            "sphinx-autobuild>=0.7.1 ; python_version>='3.6'",
-            "sphinx-rtd-theme>=0.4.3",
         ]
     }, """
-    python_requires=">=3.5",
+    python_requires=">=3.7",
 )
