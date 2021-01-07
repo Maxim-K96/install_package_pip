@@ -30,3 +30,4 @@ treads = 3
 
 install = install_package_pip(treads, packages)
 ```
+![primer](./data/Peek 2021-01-07 17-19.gif)
