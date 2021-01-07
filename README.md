@@ -31,3 +31,4 @@ treads = 3
 install = install_package_pip(treads, packages)
 ```
 ![primer](./data/Peek_2021-01-07_17-19.gif)
+![primer](./data/Peek_2021-01-07_18-15.gif)
